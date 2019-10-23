@@ -1,19 +1,22 @@
 package main
 
 import (
-	"./types"
 	"bufio"
 	"encoding/xml"
-	"fmt"
+	"golang.org/x/text/unicode/norm"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strconv"
 	"strings"
+
+	"./types"
 )
 
 const (
-	LXX_PATH = "src/First1KGreek-LXX-XML"
+	LXX_PATH    = "src/First1KGreek-LXX-XML"
 	BOOK_FOLDER = "src/First1KGreek-LXX-RAW"
 )
 
@@ -27,7 +30,7 @@ func main() {
 	log.Printf("Done processing %d files\n", len(allBooks))
 }
 
-func listAllFiles(root string) ([]string){
+func listAllFiles(root string) []string {
 	var files []string
 
 	err := filepath.Walk(LXX_PATH, func(path string, info os.FileInfo, err error) error {
@@ -43,12 +46,13 @@ func listAllFiles(root string) ([]string){
 }
 
 func writingBook(book string) {
-	xmlFile, err := os.Open(book)
-	// if we os.Open returns an error then handle it
-	if err != nil {
-		fmt.Println(err)
-	}
+	re := regexp.MustCompile(`(0([0-9]*))`)
+	bookNumberInt, err := strconv.Atoi(re.FindAllString(book, -1)[0])
+	check(err)
+	bookNumber := strconv.Itoa(bookNumberInt)
 
+	xmlFile, err := os.Open(book)
+	check(err)
 	// defer the closing of our xmlFile so that we can parse it later on
 	defer xmlFile.Close()
 
@@ -68,11 +72,14 @@ func writingBook(book string) {
 	//log.Println("Book: ", bookName, book)
 	text := rawFormat.Text.Body.Div
 
-	f, err := os.Create(BOOK_FOLDER + "/" + bookName + ".txt")
+	fName := BOOK_FOLDER + "/" + bookNumber + "." + bookName + ".txt"
+	targetName := strings.Replace(fName, " ", "_", -1)
+	f, err := os.Create(targetName)
 	check(err)
 
 	w := bufio.NewWriter(f)
-
+	wc := norm.NFC.Writer(w)
+	defer wc.Close()
 	defer f.Close()
 
 	for chapter := 0; chapter < len(text.Div); chapter++ {
@@ -90,8 +97,8 @@ func writingBook(book string) {
 				//log.Println(verseText)
 			}
 			sanitizedText := strings.TrimSpace(strings.Replace(verseText, "\n", "", -1))
-
-			_, errW := w.WriteString(bookName + "::" + chapterNumber + ":" + verseNumber + " " + sanitizedText + "\n")
+			textByte := []byte(bookNumber + "." + chapterNumber + "." + verseNumber + " " + sanitizedText + "\n")
+			_, errW := wc.Write(textByte)
 			check(errW)
 			w.Flush()
 		}
