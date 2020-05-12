@@ -5,6 +5,7 @@ from roman_numerals import convert_to_numeral
 WORK_LIST = [
     "10.Ruth",
     "19.Esther",
+    "27.Psalmi",
     "36.Osee",
     "37.Amos",
     "38.Michaeas",
@@ -25,6 +26,7 @@ WORK_LIST = [
 TITLES = {
     "10": "RUTH",
     "19": "ESTHER",
+    "27": "PSALMI",
     "36": "OSEE",
     "37": "AMOS",
     "38": "Michaeas",
