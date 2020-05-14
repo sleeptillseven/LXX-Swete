@@ -1,11 +1,14 @@
 ["text_validator.plugins.whitespace"]
-  CHECK_CRLF = true
-  CHECK_TABS = true
-  CHECK_TRAILING_WHITESPACE = true
-  CHECK_NO_EOF_NEWLINE = true
+CHECK_CRLF = true
+CHECK_TABS = true
+CHECK_TRAILING_WHITESPACE = true
+CHECK_NO_EOF_NEWLINE = true
 
 ["text_validator.plugins.unicode"]
-  CONFIRM_UTF_8_NFC = true
+CONFIRM_UTF_8_NFC = true
+
+["text_validator.plugins.ref_line_format"]
+REF_REGEX = "(\\d+\\.\\d+$|p\\d+\\.head+$|p\\d+\\.subscript+$|\\d+\\.head+$||\\d+\\.note+$)"
 
 ["text_validator.plugins.characters"]
 REPLACE_CHARS = [
@@ -17,4 +20,15 @@ REPLACE_CHARS = [
     ["\u0374", "\u02B9"],
     ["\u03D5", "\u03C6"],
     ["\u03D1", "\u03B8"],
+]
+TOKEN_REGEXES = [
+    # each whitespace-separated token must match one of these regexes
+    "\\d+\\.\\d+\\.\\d+$",
+    "\\d+\\.title$",
+    "\\d+\\.note$",
+    "title\\.0$",
+    "[\u201C(]*[A-Za-z\u2019\\-]+[.,:;)\u201D]?$",
+    "[«(\u201C\u2019]*[\u0370-\u03FF\u1F00-\u1FFF]+\u2019?[.,:;»)·\u2014\u201D]*$",
+    "\u2014$",
+    "\\([a-z]\\)$",
 ]
