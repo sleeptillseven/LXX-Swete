@@ -97,7 +97,6 @@ for WORK in WORK_LIST:
             prev_chapter = None
             print(HEADER, file=g)
             for line in f:
-                print(line)
                 parts = line.strip().split(maxsplit=1)
                 ref = parts[0].split(".")
                 if len(ref) == 2:
