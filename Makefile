@@ -30,5 +30,14 @@ generate-source-texts: ## parse XML and create NFC-compliant texts
 	@echo "==> parsing source files and extracting text"
 	@go run scripts/parsing/parse_lxx.go
 
+build-html: ## build HTML files from sources
+	@echo "building HTML docs..."
+	@cd scripts && python3 build_static.py && cd ..
+	@echo "🍺 done"
+
+check-encoding: ## verify encoding of text
+	@echo "running encoding checker..."
+	@validate-text text-validator.toml texts/DONE/*.txt
+
 help:
 	@grep -E '^[0-9a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
