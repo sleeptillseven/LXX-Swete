@@ -24,6 +24,9 @@ REPLACE_CHARS = [
 TOKEN_REGEXES = [
     # each whitespace-separated token must match one of these regexes
     "\\d+\\.\\d+\\.\\d+$",
+    "\\d+.[A-F]\\.\\d+$",
+    "\\d+\\.\\d+\\.\\d+[a-z]$",
+    "\\d+\\.\\d+\\.\\d+\\-\\d+$",
     "\\d+\\.title$",
     "\\d+\\.note$",
     "title\\.0$",
@@ -31,4 +34,7 @@ TOKEN_REGEXES = [
     "[«(\u201C\u2019]*[\u0370-\u03FF\u1F00-\u1FFF]+\u2019?[.,:;»)·\u2014\u201D]*$",
     "\u2014$",
     "\\([A-Za-z]\\)$",
+    "ξβʹ$",
+    "εʹ$",
+    "ιʹ$",
 ]
